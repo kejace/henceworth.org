@@ -4,13 +4,12 @@
 module Main where
 
 import           Control.Monad (forM_, zipWithM_, liftM)
-import           Data.Monoid (mappend)
 import           Hakyll
 
 import Control.Arrow ((>>>), arr, (^>>), (>>^))
 import           Data.Monoid     ((<>), mconcat)
 import           Prelude         hiding (id)
-import Data.Monoid (mempty, mappend)
+import Data.Monoid (mempty)
 import Data.List (find)
 import Data.Maybe (fromMaybe)
 
@@ -58,7 +57,7 @@ main = hakyll $ do
     tags <- buildCategories allPosts (fromCapture "tags/*.html")
 
     -- Render each and every post
-    match allPosts $ version "maintext" $ do
+    match allPosts  $ do
         route   $ setExtension ".html"
         compile $ do
             pandocCompilerWithTransform defaultHakyllReaderOptions
@@ -78,7 +77,7 @@ main = hakyll $ do
         compile $ pandocCompilerWithTransform defaultHakyllReaderOptions
                                     defaultHakyllWriterOptions {
                                         writerTableOfContents = True
-                                      , writerTemplate = "$body$"
+                                      , writerTemplate = "$footnotes$"
                                       , writerStandalone = True
                                       } extractNotes                 
 
@@ -86,7 +85,7 @@ main = hakyll $ do
     create ["archive.html"] $ do
         route idRoute
         compile $ do
-            posts <- recentFirst =<< loadAll allPosts
+            posts <- recentFirst =<< loadAll (allPosts .&&. hasNoVersion)
             let ctx = constField "title" "Posts" <>
                         listField "posts" (postCtx tags) (return posts) <>
                         defaultContext
@@ -97,12 +96,12 @@ main = hakyll $ do
 
     -- Post tags
     tagsRules tags $ \tag pattern -> do
-        let title = "Posts tagged " ++ tag
+        let title = "Category " ++ tag
 
         -- Copied from posts, need to refactor
         route idRoute
         compile $ do
-            posts <- recentFirst =<< loadAll pattern
+            posts <- recentFirst =<< loadAll (pattern .&&. hasNoVersion)
             let ctx = constField "title" title <>
                         listField "posts" (postCtx tags) (return posts) <>
                         defaultContext
@@ -111,12 +110,11 @@ main = hakyll $ do
                 >>= loadAndApplyTemplate "templates/frontpage.html" ctx
                 >>= relativizeUrls
 
-
     -- Index
     match "index.html" $ do
         route idRoute
         compile $ do
-            posts <- fmap (take 3) . recentFirst =<< loadAll allPosts
+            posts <- fmap (take 5) . recentFirst =<< loadAll (allPosts .&&. hasNoVersion)
             let indexContext =
                     listField "posts" (postCtx tags) (return posts) <>
                     field "tags" (\_ -> renderTagList tags) <>
@@ -147,8 +145,8 @@ postCtx :: Tags -> Context String
 postCtx tags = mconcat
     [ modificationTimeField "mtime" "%U"
     , dateField "date" "%B %e, %Y"
-    , tagsField "tags" tags,
-    field "footnotes" $ \item ->
+    , tagsField "tags" tags
+    , field "footnotes" $ \item ->
         loadBody ((itemIdentifier item) { identifierVersion = Just "footnotes"})
     , field "toc" $ \item ->
         loadBody ((itemIdentifier item) { identifierVersion = Just "toc"})
