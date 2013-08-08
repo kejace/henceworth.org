@@ -48,13 +48,19 @@ main = hakyll $ do
         route   idRoute
         compile compressCssCompiler
 
+    match "stylesheets/*" $ do
+        route   idRoute
+        compile compressCssCompiler    
+
+
+    tags <- buildCategories allPosts (fromCapture "tags/*.html")    
+
     match (fromList ["about.rst", "contact.markdown"]) $ do
         route   $ setExtension "html"
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/frontpage.html" defaultContext
+            >>= loadAndApplyTemplate "templates/frontpage_skeleton.html" defaultContext
             >>= relativizeUrls
 
-    tags <- buildCategories allPosts (fromCapture "tags/*.html")
 
     -- Render each and every post
     match allPosts  $ do
@@ -68,9 +74,9 @@ main = hakyll $ do
                                       } removeNotes  
 
                 >>= saveSnapshot "content"
-                >>= return . fmap demoteHeaders
-                >>= loadAndApplyTemplate "templates/post.html" (postCtx tags)
-                >>= loadAndApplyTemplate "templates/frontpage.html" defaultContext
+             --   >>= return . fmap demoteHeaders
+                >>= loadAndApplyTemplate "templates/post_skeleton.html" (postCtx tags)
+                >>= loadAndApplyTemplate "templates/frontpage_skeleton.html" defaultContext
                 >>= relativizeUrls
 
     match allPosts $ version "footnotes" $
@@ -91,7 +97,7 @@ main = hakyll $ do
                         defaultContext
             makeItem ""
                 >>= loadAndApplyTemplate "templates/archive.html" ctx
-                >>= loadAndApplyTemplate "templates/frontpage.html" ctx
+                >>= loadAndApplyTemplate "templates/archive_skeleton.html" ctx
                 >>= relativizeUrls
 
     -- Post tags
@@ -107,11 +113,11 @@ main = hakyll $ do
                         defaultContext
             makeItem ""
                 >>= loadAndApplyTemplate "templates/archive.html" ctx
-                >>= loadAndApplyTemplate "templates/frontpage.html" ctx
+                >>= loadAndApplyTemplate "templates/frontpage_skeleton.html" ctx
                 >>= relativizeUrls
 
     -- Index
-    match "index.html" $ do
+    match (fromList ["index.html", "allposts.html"]) $ do
         route idRoute
         compile $ do
             posts <- fmap (take 5) . recentFirst =<< loadAll (allPosts .&&. hasNoVersion)
@@ -122,7 +128,7 @@ main = hakyll $ do
 
             getResourceBody
                 >>= applyAsTemplate indexContext
-                >>= loadAndApplyTemplate "templates/frontpage.html" indexContext
+                >>= loadAndApplyTemplate "templates/frontpage_skeleton.html" indexContext
                 >>= relativizeUrls
 
     -- Render RSS feed
