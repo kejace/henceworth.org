@@ -3,7 +3,6 @@ title: Hamlet
 date: 1701-01-01
 author: Shakespeare
 description: To be or not to be
-tags: tag2, tag3
 ---
 
 #Section 02

@@ -63,9 +63,10 @@ main = hakyll $ do
 
 
     -- Render each and every post
-    match allPosts  $ do
+    match allPosts $ do
         route   $ setExtension ".html"
         compile $ do
+            item <- getUnderlying
             pandocCompilerWithTransform defaultHakyllReaderOptions
                                     defaultHakyllWriterOptions {
                                         writerTableOfContents = True
@@ -76,16 +77,16 @@ main = hakyll $ do
                 >>= saveSnapshot "content"
              --   >>= return . fmap demoteHeaders
                 >>= loadAndApplyTemplate "templates/post_skeleton.html" (postCtx tags)
-                >>= loadAndApplyTemplate "templates/frontpage_skeleton.html" defaultContext
+             --   >>= loadAndApplyTemplate "templates/frontpage_skeleton.html" defaultContext
                 >>= relativizeUrls
 
     match allPosts $ version "footnotes" $
         compile $ pandocCompilerWithTransform defaultHakyllReaderOptions
                                     defaultHakyllWriterOptions {
                                         writerTableOfContents = True
-                                      , writerTemplate = "$footnotes$"
+                                      , writerTemplate = "$body$"
                                       , writerStandalone = True
-                                      } extractNotes                 
+                                      } extractNotes            
 
     -- Post list
     create ["archive.html"] $ do
@@ -142,16 +143,14 @@ main = hakyll $ do
     -- Read templates
     match "templates/*" $ compile $ templateCompiler
 
-
-
 --------------------------------------------------------------------------------
-
 
 postCtx :: Tags -> Context String
 postCtx tags = mconcat
     [ modificationTimeField "mtime" "%U"
     , dateField "date" "%B %e, %Y"
     , tagsField "tags" tags
+    --, constField "footnotes" "bla bla footnote"
     , field "footnotes" $ \item ->
         loadBody ((itemIdentifier item) { identifierVersion = Just "footnotes"})
     , field "toc" $ \item ->

@@ -3,7 +3,6 @@ title: A new article
 date: 2013-06-15
 author: Nadja Oertelt
 description: A new article
-tags: tag1, biology
 ---
 
 # Section 1 [^footnote]

@@ -1,9 +1,8 @@
 ---
-title: Hamlet
+title: Nine simple ways to make it easier to (re)use your data
 date: 2014-01-01
 author: Shakespeare2
-description: To be or not to be
-tags: tag2, tag3
+description: Some random article
 ---
 
 Nine simple ways to make it easier to (re)use your data

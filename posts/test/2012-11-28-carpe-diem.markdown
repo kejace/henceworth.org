@@ -3,7 +3,6 @@ title: Carpe Diem
 date: 2002-01-01
 author: John Doe
 description: This is just a text
-tags: tag1, tag3
 ---
 
 # Section 1 [^footnote]

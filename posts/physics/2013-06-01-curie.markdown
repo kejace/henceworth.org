@@ -3,7 +3,6 @@ title: Untersuchungen über die radioaktiven Substanzen
 date: 1904-01-01
 author: Marie Curie
 description: Marie Curies PhD thesis(?)
-tags: tag1, tag2
 ---
 
 ## Einleitung.

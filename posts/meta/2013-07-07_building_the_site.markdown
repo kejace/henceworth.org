@@ -3,7 +3,6 @@ title: My build-setup
 date: 2013-07-07
 author: Kristoffer Josefsson
 description: How we are building this site
-tags: meta
 ---
 
 First create a Heroku account [here](http://www.heroku.com).

@@ -1,9 +1,9 @@
 ---
 title: Rosa Rosa Rosam
 description: bla bla
-tags: test
 ---
 
+sdfsdf
 Suspendisse pharetra ullamcorper sem et auctor. Suspendisse vitae tellus eu
 turpis dignissim gravida ut ut tortor. Cum sociis natoque penatibus et magnis
 dis parturient montes, nascetur ridiculus mus. Morbi aliquam sapien quis nisl
@@ -24,9 +24,11 @@ felis, rhoncus id scelerisque eget, vulputate id sem. Nulla facilisi. Vestibulum
 eleifend, metus dignissim lacinia ornare, magna nulla vehicula nisi, sed
 molestie mauris ipsum vel turpis. Class aptent taciti sociosqu ad litora
 torquent per conubia nostra, per inceptos himenaeos. Nulla urna leo, vehicula
-eget dignissim a, hendrerit ut risus. Fusce ultricies elementum placerat. Nam at
+eget dignissim a, hendrerit ut risus. Fusce ultricies elementum placerat. Nam at [^1]
 dolor sed nisi mollis sollicitudin vitae at urna. Vestibulum iaculis adipiscing
 eros et mollis.
+
+[^1]: Foot note numer 1
 
 Phasellus ultricies elit eu risus sagittis eu dictum ante ultrices. Nulla
 congue, augue ac placerat tempor, orci mi luctus nisi, at varius ipsum sem sed

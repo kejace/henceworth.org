@@ -61,9 +61,11 @@
 			$body$
 		</div>
 		<div class="one-third column">
+			$if(posts)$
 			<h3 style="clear: right">Recent articles</h3>
 			$partial("templates/post-list.html")$
 			<a href="/archive.html">All posts...</a>
+			$endif$
 		</div>
 		<div class="one-third column">
 			$if(tags)$
