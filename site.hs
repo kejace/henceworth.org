@@ -1,6 +1,8 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE Arrows            #-}
 {-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE DeriveDataTypeable         #-}
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
 module Main where
 
 import           Control.Monad (forM_, zipWithM_, liftM)
@@ -24,6 +26,13 @@ import           System.Cmd      (system)
 import           System.FilePath (replaceExtension, takeDirectory)
 import qualified Text.Pandoc     as Pandoc
 
+import           Data.List                       (intercalate, intersperse,
+                                                  sortBy)
+
+import           Text.Blaze.Html.Renderer.String (renderHtml)
+import qualified Text.Blaze.Html5                as H
+import qualified Text.Blaze.Html5.Attributes     as A
+import           Text.Blaze.Html                 (toHtml, toValue, (!))
 
 --------------------------------------------------------------------------------
 import           Hakyll
@@ -93,7 +102,7 @@ main = hakyll $ do
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll (allPosts .&&. hasNoVersion)
-            let ctx = constField "title" "Posts" <>
+            let ctx = constField "title" "All articles" <>
                         listField "posts" (postCtx tags) (return posts) <>
                         defaultContext
             makeItem ""
@@ -103,13 +112,14 @@ main = hakyll $ do
 
     -- Post tags
     tagsRules tags $ \tag pattern -> do
-        let title = "Category " ++ tag
+        let title = "Issue " ++ tag
 
         -- Copied from posts, need to refactor
         route idRoute
         compile $ do
             posts <- recentFirst =<< loadAll (pattern .&&. hasNoVersion)
             let ctx = constField "title" title <>
+                        constField "subtitle" tag <>
                         listField "posts" (postCtx tags) (return posts) <>
                         defaultContext
             makeItem ""
@@ -124,7 +134,7 @@ main = hakyll $ do
             posts <- fmap (take 5) . recentFirst =<< loadAll (allPosts .&&. hasNoVersion)
             let indexContext =
                     listField "posts" (postCtx tags) (return posts) <>
-                    field "tags" (\_ -> renderTagList tags) <>
+                    field "tags" (\_ -> renderTagList' tags) <>
                     defaultContext
 
             getResourceBody
@@ -188,3 +198,12 @@ removeNotes :: Pandoc -> Pandoc
 removeNotes = bottomUp go
     where go (Note _) = Str ""
           go x = x
+
+--------------------------------------------
+-- modified from core Hakyll
+
+renderTagList' :: Tags -> Compiler (String)
+renderTagList' = renderTags makeLink (intercalate (renderHtml H.br))
+  where
+    makeLink tag url count _ _ = renderHtml $
+        H.a ! A.href (toValue url) $ toHtml (tag ++ " (" ++ show count ++ ")") 

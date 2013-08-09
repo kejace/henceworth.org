@@ -62,14 +62,16 @@
 		</div>
 		<div class="one-third column">
 			$if(posts)$
-			<h3 style="clear: right">Recent articles</h3>
+			<h3 style="clear: right">Recent articles 
+			$if(subtitle)$ in issue $subtitle$ $endif$</h3>
+			
 			$partial("templates/post-list.html")$
 			<a href="/archive.html">All posts...</a>
 			$endif$
 		</div>
 		<div class="one-third column">
 			$if(tags)$
-            <h3>Categories</h3>
+            <h3>Issues</h3>
             $tags$
             $endif$
 		</div>
@@ -84,11 +86,10 @@
                 <a href="http://henceworth.org/atom.xml">Feed <i class="icon-rss"/></a>
             </p>
             <p>
-            <a rel="license" href="http://creativecommons.org/licenses/by/3.0/deed.en_US">
-                <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png"></a>
-            <br>
             Unless specified otherwise, this work is licensed under
             a <a rel="license" href="http://creativecommons.org/licenses/by/3.0/deed.en_US">Creative Commons Attribution 3.0 Unported License</a>.
+            <a rel="license" href="http://creativecommons.org/licenses/by/3.0/deed.en_US">
+                <img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by/3.0/88x31.png"></a>
             </p>
         </footer>
 		</div>
