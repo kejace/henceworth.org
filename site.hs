@@ -61,10 +61,9 @@ main = hakyll $ do
         route   idRoute
         compile compressCssCompiler    
 
-
     tags <- buildCategories allPosts (fromCapture "tags/*.html")    
 
-    match (fromList ["about.rst", "contact.markdown"]) $ do
+    match "pages/*" $ do
         route   $ setExtension "html"
         compile $ pandocCompiler
             >>= loadAndApplyTemplate "templates/frontpage_skeleton.html" defaultContext
@@ -112,7 +111,7 @@ main = hakyll $ do
 
     -- Post tags
     tagsRules tags $ \tag pattern -> do
-        let title = "Issue " ++ tag
+        let title = "<em>Issue</em> " ++ tag
 
         -- Copied from posts, need to refactor
         route idRoute
@@ -123,7 +122,7 @@ main = hakyll $ do
                         listField "posts" (postCtx tags) (return posts) <>
                         defaultContext
             makeItem ""
-                >>= loadAndApplyTemplate "templates/archive.html" ctx
+             --   >>= loadAndApplyTemplate "templates/archive.html" ctx
                 >>= loadAndApplyTemplate "templates/frontpage_skeleton.html" ctx
                 >>= relativizeUrls
 
@@ -141,19 +140,12 @@ main = hakyll $ do
                 >>= applyAsTemplate indexContext
                 >>= loadAndApplyTemplate "templates/frontpage_skeleton.html" indexContext
                 >>= relativizeUrls
-
-    -- Render RSS feed
-    create ["rss.xml"] $ do
-        route idRoute
-        compile $ do
-            loadAllSnapshots "posts/*" "content"
-                >>= fmap (take 10) . recentFirst
-                >>= renderAtom (feedConfiguration "All posts") feedCtx            
-
+                
     -- Read templates
     match "templates/*" $ compile $ templateCompiler
 
 --------------------------------------------------------------------------------
+
 
 postCtx :: Tags -> Context String
 postCtx tags = mconcat
