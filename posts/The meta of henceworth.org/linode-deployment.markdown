@@ -45,6 +45,44 @@ create a bare repository
 
 Then on our local machine we set up a new remote
 
-    git remote add gutenberg
+    git remote add gutenberg henceworth.org:hencewoth.org-site.git
 
-    
+Also, make sure in `.git/config` that we have the line
+
+    push = +master:refs/heads/master
+
+under our new remote repository.
+
+On our linode server, named gutenberg
+
+```bash
+
+#!/bin/sh
+if [ -n $GIT_DIR ]; then
+unset GIT_DIR
+cd ..
+fi
+
+pwd
+
+if [ -d "henceworth/" ]; then
+echo "directory exists"
+cd henceworth
+git pull 
+git reset --hard
+
+else
+
+echo "cloning directory"
+git clone henceworth.org-site.git henceworth
+fi
+
+cd henceworth
+
+ghc --make site.hs 
+./site clean
+./site build
+./site deploy
+```
+
+Hello Ana
