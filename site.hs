@@ -1,47 +1,47 @@
 --------------------------------------------------------------------------------
-{-# LANGUAGE Arrows            #-}
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE Arrows                     #-}
+{-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE DeriveDataTypeable         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
 module Main where
 
-import           Control.Monad (forM_, zipWithM_, liftM)
-import           Hakyll
+--------------------------------------------------------------------------------
 
+import Control.Monad (forM_, zipWithM_, liftM)
 import Control.Arrow ((>>>), arr, (^>>), (>>^))
-import           Data.Monoid     ((<>), mconcat)
-import           Prelude         hiding (id)
-import Data.Monoid (mempty)
-import Data.List (find)
-import Data.Maybe (fromMaybe)
+
+import Prelude         hiding (id)
+
+import Data.Monoid  ((<>), mconcat,mempty)
+import Data.Maybe   (fromMaybe)
+import Data.List    (intercalate, intersperse, sortBy, find)
 
 import Text.Pandoc
+import qualified Text.Pandoc     as Pandoc
 import Text.Pandoc.Shared (stringify)
 import Text.Pandoc.Options
 
---------------------------------------------------------------------------------
-import           Data.Monoid     ((<>), mconcat)
-import           Prelude         hiding (id)
 import           System.Cmd      (system)
 import           System.FilePath (replaceExtension, takeDirectory)
-import qualified Text.Pandoc     as Pandoc
-
-import           Data.List                       (intercalate, intersperse,
-                                                  sortBy)
 
 import           Text.Blaze.Html.Renderer.String (renderHtml)
 import qualified Text.Blaze.Html5                as H
 import qualified Text.Blaze.Html5.Attributes     as A
 import           Text.Blaze.Html                 (toHtml, toValue, (!))
 
---------------------------------------------------------------------------------
 import           Hakyll
 
+--------------------------------------------------------------------------------
 
 -- Allow for reference style links in markdown
 pandocWriteOptions = defaultHakyllWriterOptions
     { writerReferenceLinks = True
     }
+
+config :: Configuration
+config = defaultConfiguration
+        {   deployCommand = "rsync -av _site/ /usr/share/nginx/www"}
 
 --------------------------------------------------------------------------------
 main :: IO ()
@@ -145,11 +145,6 @@ main = hakyllWith config $ do
     match "templates/*" $ compile $ templateCompiler
 
 --------------------------------------------------------------------------------
-
-
-config :: Configuration
-config = defaultConfiguration
-        {   deployCommand = "rsync -av _site/ /usr/share/nginx/www"}
 
 
 postCtx :: Tags -> Context String

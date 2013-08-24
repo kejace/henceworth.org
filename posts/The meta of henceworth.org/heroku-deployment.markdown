@@ -14,7 +14,7 @@ Get the toolchains for [Heroku](https://toolbelt.heroku.com) and [GitHub](http:/
 
 Clone [this](https://github.com/puffnfresh/haskell-buildpack-demo) repo
 
-    git clone https://github.com/pufuwozu/haskell-buildpack-demo.git
+	git clone https://github.com/pufuwozu/haskell-buildpack-demo.git
 
 Then create a Heroku app
 
