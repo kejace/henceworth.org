@@ -47,5 +47,4 @@ Then on our local machine we set up a new remote
 
     git remote add gutenberg
 
-
-Hello test
+    
