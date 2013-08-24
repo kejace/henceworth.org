@@ -149,7 +149,7 @@ main = hakyllWith config $ do
 
 config :: Configuration
 config = defaultConfiguration
-        {   deployCommand = "cp  _site /usr/share/nginx/www"}
+        {   deployCommand = "cp -r _site /usr/share/nginx/www"}
 
 
 postCtx :: Tags -> Context String
