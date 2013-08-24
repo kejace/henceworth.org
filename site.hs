@@ -45,7 +45,7 @@ pandocWriteOptions = defaultHakyllWriterOptions
 
 --------------------------------------------------------------------------------
 main :: IO ()
-main = hakyll $ do
+main = hakyllWith config $ do
 
     let allPosts = "posts/**/*.markdown"
 
@@ -145,6 +145,11 @@ main = hakyll $ do
     match "templates/*" $ compile $ templateCompiler
 
 --------------------------------------------------------------------------------
+
+
+config :: Configuration
+config = defaultConfiguration
+        {   deployCommand = "cp  _site /usr/share/nginx/www"}
 
 
 postCtx :: Tags -> Context String

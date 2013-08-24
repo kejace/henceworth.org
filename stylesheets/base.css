@@ -58,6 +58,11 @@
 		-webkit-text-size-adjust: 100%;
  }
 
+ 	code {
+ 		background : #ddd;
+ 		color: #000;
+ 	}
+
 
 /* #Typography
 ================================================== */
