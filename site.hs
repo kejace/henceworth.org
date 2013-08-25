@@ -61,14 +61,12 @@ main = hakyllWith config $ do
         route   idRoute
         compile compressCssCompiler    
 
-    tags <- buildCategories allPosts (fromCapture "tags/*.html")    
+    tags <- buildCategories allPosts (fromCapture "tags/*.html")  
 
     match "pages/*" $ do
-        route   $ setExtension "html"
-        compile $ pandocCompiler
-            >>= loadAndApplyTemplate "templates/frontpage_skeleton.html" defaultContext
-            >>= relativizeUrls
-
+         route   idRoute
+         compile $ getResourceString >>=
+             withItemBody (unixFilter "git" ["describe", "--always"])
 
     -- Render each and every post
     match allPosts $ do
