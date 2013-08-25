@@ -67,8 +67,10 @@ pwd
 if [ -d "henceworth/" ]; then
 echo "directory exists"
 cd henceworth
-git pull 
+git pull --recurse-submodules
+git submodule update --recursive
 git reset --hard
+git submodule foreach git reset --hard
 
 else
 
