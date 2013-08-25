@@ -1,3 +1,6 @@
 [submodule "skeleton"]
 	path = skeleton
 	url = https://github.com/kejace/Skeleton.git
+[submodule "posts/henceworth-chapter"]
+	path = posts/henceworth-chapter
+	url = https://github.com/kejace/henceworth-chapter.git
