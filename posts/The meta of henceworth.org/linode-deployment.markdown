@@ -74,7 +74,7 @@ git reset --hard
 else
 
 echo "cloning directory"
-git clone henceworth.org-site.git henceworth
+git clone --recursive henceworth.org-site.git henceworth
 fi
 
 cd henceworth
@@ -85,4 +85,4 @@ ghc --make site.hs
 ./site deploy
 ```
 
-Hello Ana
+Note the `--recursive` keyword, as we will have chapters as submodules and they wouldn't be automatically initialised otherwise.
