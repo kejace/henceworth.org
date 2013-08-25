@@ -56,7 +56,6 @@ under our new remote repository.
 On our linode server, named gutenberg
 
 ```bash
-
 #!/bin/sh
 if [ -n $GIT_DIR ]; then
 unset GIT_DIR
@@ -78,7 +77,7 @@ git clone --recursive henceworth.org-site.git henceworth
 fi
 
 cd henceworth
-
+  
 ghc --make site.hs 
 ./site clean
 ./site build
