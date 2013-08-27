@@ -47,7 +47,7 @@ config = defaultConfiguration
 main :: IO ()
 main = hakyllWith config $ do
 
-    let allPosts = "posts/**/*.markdown"
+    let allPosts = "posts/**/*.md"
 
     match "images/*" $ do
         route   idRoute
