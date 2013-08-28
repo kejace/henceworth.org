@@ -30,6 +30,8 @@ import qualified Text.Blaze.Html5                as H
 import qualified Text.Blaze.Html5.Attributes     as A
 import           Text.Blaze.Html                 (toHtml, toValue, (!))
 
+import System.Process
+
 import           Hakyll
 
 --------------------------------------------------------------------------------
@@ -150,6 +152,7 @@ postCtx tags = mconcat
     [ modificationTimeField "mtime" "%U"
     , dateField "date" "%B %e, %Y"
     , tagsField "tags" tags
+    , gitTag "git"
     --, constField "footnotes" "bla bla footnote"
     , field "footnotes" $ \item ->
         loadBody ((itemIdentifier item) { identifierVersion = Just "footnotes"})
@@ -172,6 +175,19 @@ feedConfiguration title = FeedConfiguration
     , feedAuthorEmail = "hello@henceworth.org"
     , feedRoot        = "http://henceworth.org"
     }
+
+
+-- gitTag, borrowed from http://blaenkdenum.com/posts/the-switch-to-hakyll/
+gitTag :: String -> Context String
+gitTag key = field key $ \item -> do
+  let fp = (toFilePath $ itemIdentifier item)
+  unsafeCompiler $ do
+    sha <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%h", fp] []
+    message <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%s", fp] []
+    return ("<span class=\"hash\"><a href=\"https://github.com/kejace/henceworth.org/commit/" ++ sha ++
+           "\" title=\"" ++ message ++ "\">" ++ sha ++ "</a> :: </span>" ++
+           "<a href=\"https://github.com/kejace/henceworth.org/commits/source/" ++ fp ++ "\">" ++
+           "history</a>")
 
 ---------------------------------------------------------------------------------
 
