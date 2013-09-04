@@ -63,10 +63,13 @@
 		<div class="one-third column">
 			$if(posts)$
 			<h3 style="clear: right">Recent articles 
-			$if(subtitle)$ in issue $subtitle$ $endif$</h3>
+				$if(subtitle)$
+					in issue $subtitle$
+				$endif$
+			</h3>
 			
 			$partial("templates/post-list.html")$
-			<a href="/archive.html">All posts...</a>
+
 			$endif$
 		</div>
 		<div class="one-third column">
@@ -77,6 +80,7 @@
 		</div>
 		<div class="sixteen columns" style="margin-top: 40px">
 		<footer class="site-footer">
+			<hr/>
             <p>
                 London/Boston - 
                 <a href="mailto:hello@henceworth.org">

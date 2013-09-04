@@ -3,6 +3,7 @@
 {-# LANGUAGE OverloadedStrings          #-}
 {-# LANGUAGE DeriveDataTypeable         #-}
 {-# LANGUAGE GeneralizedNewtypeDeriving #-}
+{-# LANGUAGE ScopedTypeVariables        #-}
 
 module Main where
 
@@ -16,6 +17,7 @@ import Prelude         hiding (id)
 import Data.Monoid  ((<>), mconcat,mempty)
 import Data.Maybe   (fromMaybe)
 import Data.List    (intercalate, intersperse, sortBy, find)
+import Data.Functor ((<$>))
 
 import Text.Pandoc
 import qualified Text.Pandoc     as Pandoc
@@ -31,6 +33,9 @@ import qualified Text.Blaze.Html5.Attributes     as A
 import           Text.Blaze.Html                 (toHtml, toValue, (!))
 
 import System.Process
+import System.Directory
+
+import           System.FilePath                 (takeBaseName, takeDirectory)
 
 import           Hakyll
 
@@ -49,7 +54,7 @@ config = defaultConfiguration
 main :: IO ()
 main = hakyllWith config $ do
 
-    let allPosts = "posts/**/*.md"
+    let allPosts = "posts/**/**/*.md"
 
     match "images/*" $ do
         route   idRoute
@@ -63,7 +68,11 @@ main = hakyllWith config $ do
         route   idRoute
         compile compressCssCompiler    
 
-    tags <- buildCategories allPosts (fromCapture "tags/*.html")  
+    match "posts/**/**/*.jpg" $ do
+        route   idRoute
+        compile copyFileCompiler
+
+    tags <- buildCategories' allPosts (fromCapture "tags/*.html")  
 
     match "pages/*" $ do
          route   idRoute
@@ -153,6 +162,7 @@ postCtx tags = mconcat
     , dateField "date" "%B %e, %Y"
     , tagsField "tags" tags
     , gitTag "git"
+    , listField "pics" picContext getPicsInDir
     --, constField "footnotes" "bla bla footnote"
     , field "footnotes" $ \item ->
         loadBody ((itemIdentifier item) { identifierVersion = Just "footnotes"})
@@ -178,16 +188,19 @@ feedConfiguration title = FeedConfiguration
 
 
 -- gitTag, borrowed from http://blaenkdenum.com/posts/the-switch-to-hakyll/
+-- TODO: look into submodules (subtrees?) to fix git-log when in a submodule
+-- alternative, change directory before doing git
+
 gitTag :: String -> Context String
 gitTag key = field key $ \item -> do
   let fp = (toFilePath $ itemIdentifier item)
   unsafeCompiler $ do
+    --(_, Just hout, _, _) <- createProcess (proc "ls" []){ cwd = Just "/home/bob", std_out = CreatePipe }
     sha <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%h", fp] []
     message <- readProcess "git" ["log", "-1", "HEAD", "--pretty=format:%s", fp] []
-    return ("<span class=\"hash\"><a href=\"https://github.com/kejace/henceworth.org/commit/" ++ sha ++
-           "\" title=\"" ++ message ++ "\">" ++ sha ++ "</a> :: </span>" ++
-           "<a href=\"https://github.com/kejace/henceworth.org/commits/source/" ++ fp ++ "\">" ++
-           "history</a>")
+    return ("<a href=\"https://github.com/kejace/henceworth.org/commits/master/" ++ fp ++ "\">" ++
+           "history</a>" ++ " :: " ++ "<span class=\"hash\"><a href=\"https://github.com/kejace/henceworth.org/commit/" ++ sha ++
+           "\" title=\"" ++ message ++ "\">" ++ sha ++ "</a></span>")
 
 ---------------------------------------------------------------------------------
 
@@ -205,6 +218,17 @@ removeNotes = bottomUp go
     where go (Note _) = Str ""
           go x = x
 
+-- gallery code
+
+getPicsInDir :: Compiler [Item CopyFile]
+getPicsInDir = do
+    postPath <- toFilePath <$> getUnderlying
+    let pattern = fromGlob $ takeDirectory postPath ++ "/*.jpg"
+    loadAll pattern
+
+picContext :: Context CopyFile
+picContext = urlField "url"
+
 --------------------------------------------
 -- modified from core Hakyll
 
@@ -213,3 +237,14 @@ renderTagList' = renderTags makeLink (intercalate (renderHtml H.br))
   where
     makeLink tag url count _ _ = renderHtml $
         H.a ! A.href (toValue url) $ toHtml (tag ++ " (" ++ show count ++ ")") 
+
+buildCategories' :: MonadMetadata m => Pattern -> (String -> Identifier)
+                -> m Tags
+buildCategories' = buildTagsWith getCategory'
+
+getCategory' :: MonadMetadata m => Identifier -> m [String]
+getCategory' = return . return . takeBaseName . takeDirectory . takeDirectory . toFilePath
+
+
+
+
