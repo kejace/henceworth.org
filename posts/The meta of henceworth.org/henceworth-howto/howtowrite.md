@@ -21,7 +21,7 @@ Our backend uses [Pandoc](http://johnmacfarlane.net/pandoc/) which has extra sup
 [^note_1]: Does this work in your markdown viewer?
    Standard Markdown doesn't support footnotes, so this might look odd. But in the henceworth backend, it will be displayed on the right column, grouped together with the paragraph in which it was written.
 
-Additionally, every article will have a few extra fields, such as author name, a short decription etc. This is noted in the beginning of the file, as above.
+Additionally, every article will have a few extra fields, such as author name, a short decription etc. This is noted in the beginning of the file, as you see at the top of this page.
 
 As of now, the folder structure is something like this:
 
