@@ -1,5 +1,5 @@
 ---
-title: My linode-setup
+title: My linode-setup (check this)
 date: 2013-08-24
 author: Kristoffer Josefsson
 description: How we are deploying this site to linode

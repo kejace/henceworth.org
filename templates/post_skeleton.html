@@ -44,12 +44,18 @@
 	<!-- Delete everything in this .container and get started on your own site! -->
 
 	<div class="container">
-		<div class="sixteen columns">
-			<h3 class="remove-bottom" style="margin-top: 40px">
-				<em>Article </em> $title$
-			</h3>
-			<hr />
+		<div class="eight columns">
+			<h2 class="remove-bottom" style="margin-top: 40px">
+				<em> $title$ </em>
+			</h2>
 		</div>
+			<div class="eight columns">
+			<h2 class="remove-bottom" style="margin-top: 40px">
+				Footnotes
+			</h2>
+			</div>
+			<hr/>
+		
 
 		<ul>
 		
@@ -70,11 +76,10 @@
 
 		<div class="eight columns">
 			$if(footnotes)$
-            <h3>Footnotes</h3>
             $footnotes$
             $endif$
 		</div>
-		<hr/>
+		
 		<div class="sixteen columns" style="margin-top: 40px">
 		<footer class="site-footer">
 			<hr/>

@@ -68,7 +68,7 @@ main = hakyllWith config $ do
         route   idRoute
         compile compressCssCompiler    
 
-    match "posts/**/**/*.jpg" $ do
+    match ("posts/**/**/*.jpg" .||."posts/**/**/*.png") $ do
         route   idRoute
         compile copyFileCompiler
 
