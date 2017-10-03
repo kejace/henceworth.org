@@ -4,7 +4,7 @@ we use sumbodules for some of the posts in our publication - check out recursive
 
 you need [`stack`](https://www.stackage.org/)
 
-``sh
+```sh
 git clone https://github.com/kejace/henceworth.org --recurse
 cd henceworth.org
 stack setup
