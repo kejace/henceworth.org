@@ -1,9 +1,12 @@
 # instructions
 
+we use sumbodules for some of the posts in our publication - check out recursively!
+
 you need [`stack`](https://www.stackage.org/)
 
 ``sh
-
+git clone https://github.com/kejace/henceworth.org --recurse
+cd henceworth.org
 stack setup
 stack install
 stack exec henceworth-org -- watch
